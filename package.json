@@ -13,19 +13,25 @@
     "screenshots": "node scripts/screenshots.mjs",
     "lighthouse": "node scripts/lighthouse.mjs",
     "images": "node scripts/make-images.mjs",
-    "verify": "node scripts/verify.mjs"
+    "verify": "node scripts/verify.mjs",
+    "lint": "eslint ."
   },
   "dependencies": {
     "@astrojs/check": "^0.9.10",
-    "astro": "^5.18.2",
+    "astro": "^7.3.8",
     "typescript": "^5.9.3",
     "zod": "^3.25.76"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.13.0",
+    "@eslint/js": "^9.39.5",
     "@playwright/test": "^1.64.0",
     "@types/node": "^26.6.5",
+    "eslint": "^9.39.5",
+    "eslint-plugin-astro": "^1.7.0",
+    "globals": "^17.13.0",
     "lighthouse": "^13.5.0",
+    "typescript-eslint": "^8.71.2",
     "vitest": "^5.0.4"
   },
   "engines": {

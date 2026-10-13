@@ -7,6 +7,9 @@ import { join } from 'node:path';
 const run = (cmd) => { console.log(`\n=== ${cmd} ===`); execSync(cmd, { stdio: 'inherit' }); };
 const up = async () => { try { return (await fetch('http://localhost:4321/')).ok; } catch { return false; } };
 
+run('npm run lint');
+run('npm audit --omit=dev --audit-level=high');
+run('node scripts/osv.mjs');
 run('npm run build');
 run('npm run test:unit');
 let preview;
@@ -15,9 +18,9 @@ if (!(await up())) {
   for (let i = 0; i < 30 && !(await up()); i++) await new Promise((r) => setTimeout(r, 1000));
 }
 try {
-  run('npx playwright test');
-  if (process.env.SKIP_LIGHTHOUSE) console.log('\n=== Lighthouse skipped (SKIP_LIGHTHOUSE) ===');
-  else { run('npm run lighthouse'); run('npx playwright test -g SRS-020 --project=chromium'); }
+  run('npx playwright test --grep-invert "SRS-020|SRS-021"');
+  run('npm run lighthouse');
+  run('npx playwright test -g "SRS-020|SRS-021" --project=chromium');
 } finally {
   if (preview) process.kill(-preview.pid);
 }
