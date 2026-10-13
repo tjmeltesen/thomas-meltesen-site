@@ -1,0 +1,25 @@
+---
+import { experience } from '../../lib/content';
+import { fmtYm } from '../../lib/date';
+---
+  <section id="experience" class="section alt" aria-labelledby="exp-title">
+    <div class="wrap">
+      <p class="section-kicker" data-reveal>Experience</p>
+      <h2 id="exp-title" class="section-title" data-reveal>Where I’ve shipped.</h2>
+      <ol class="timeline">
+        {experience.map((x) => (
+          <li class="timeline-item" data-reveal data-testid="experience-item" data-end={x.end}>
+            <div class="timeline-meta">
+              <p class="muted small"><time datetime={x.start}>{fmtYm(x.start)}</time> – <time datetime={x.end}>{fmtYm(x.end)}</time></p>
+              <p class="muted small">{x.location}</p>
+            </div>
+            <div class="timeline-body">
+              <h3>{x.role}</h3>
+              <p class="company">{x.company}</p>
+              <ul>{x.highlights.map((h) => <li>{h}</li>)}</ul>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>

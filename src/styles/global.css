@@ -109,7 +109,11 @@ main:focus { outline: none; }
 .project-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr)); gap: var(--s3); }
 .project-card { min-width: 0; }
 .project-link { position: relative; display: flex; flex-direction: column; gap: var(--s1); height: 100%; padding: var(--s4); border-radius: var(--radius); background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow); color: var(--text); overflow: hidden; isolation: isolate; }
-.project-link:hover { text-decoration: none; box-shadow: var(--shadow-hover); }
+.project-link:hover { text-decoration: none; }
+/* Hover elevation: a pre-rendered shadow layer that fades in (opacity only), instead of animating box-shadow. */
+.project-card { position: relative; }
+.project-card::after { content: ''; position: absolute; inset: 0; z-index: -1; border-radius: var(--radius); box-shadow: var(--shadow-hover); opacity: 0; pointer-events: none; }
+.project-card:hover::after, .project-card:focus-within::after { opacity: 1; }
 .project-link h3 { font-size: 26px; margin-top: var(--s1); }
 .project-link > p:not(.muted) { color: var(--muted); }
 .project-link .chips { margin-top: var(--s2); }
@@ -172,11 +176,13 @@ main:focus { outline: none; }
   .avatar { animation: pop 900ms var(--ease-spring) both; }
 
   .btn, .project-link, .card, .chips li, .nav-links a::after, .more svg, .project-orb, .next-title svg {
-    transition: transform var(--dur-2) var(--ease-out), box-shadow var(--dur-2) var(--ease-out), background-color var(--dur-1), color var(--dur-1), opacity var(--dur-2);
+    transition: transform var(--dur-2) var(--ease-out), background-color var(--dur-1), color var(--dur-1), opacity var(--dur-2);
   }
   .btn:hover { transform: scale(1.03); }
   .btn:active { transform: scale(.97); }
   .project-link:hover { transform: translateY(-6px); }
+  .project-card::after { transition: opacity var(--dur-2) var(--ease-out), transform var(--dur-2) var(--ease-out); }
+  .project-card:hover::after { transform: translateY(-6px); }
   .project-link:hover .project-orb { transform: scale(1.6); }
   .project-link:hover .more svg, .next a:hover .next-title svg { transform: translateX(4px); }
   .card:hover { transform: translateY(-3px); }

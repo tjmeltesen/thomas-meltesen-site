@@ -1,0 +1,21 @@
+---
+import Avatar from '../Avatar.astro';
+import Icon from '../Icon.astro';
+import { profile } from '../../lib/content';
+const [first, ...rest] = profile.name.split(' ');
+---
+  <section id="top" class="hero" aria-labelledby="hero-title">
+    <div class="wrap hero-inner">
+      <Avatar />
+      <p class="eyebrow hero-in">{profile.location}</p>
+      <h1 id="hero-title" class="hero-title hero-in">
+        <span class="line">{first}</span> <span class="line gradient-text">{rest.join(' ')}</span>
+      </h1>
+      <p class="hero-headline hero-in" data-testid="headline">{profile.headline}</p>
+      <div class="hero-cta hero-in">
+        <a class="btn btn-primary" href="#projects">See my work</a>
+        <a class="btn btn-ghost" href="#contact">Get in touch <Icon name="arrow" /></a>
+      </div>
+    </div>
+    <div class="hero-glow" aria-hidden="true"></div>
+  </section>
