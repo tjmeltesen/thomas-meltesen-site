@@ -1,0 +1,16 @@
+---
+import { contact } from '../lib/content';
+import { encodeEmail } from '../lib/email';
+const parts = encodeEmail(contact.emailUser, contact.emailDomain);
+---
+<div class="email-reveal" data-email-reveal data-a={parts[0]} data-b={parts[1]}>
+  <button type="button" class="btn btn-primary" data-email-button hidden>
+    Show email address
+  </button>
+  <a class="btn btn-primary" data-email-link hidden></a>
+  <p class="noscript-note" data-email-fallback>
+    Email is revealed with JavaScript to keep it away from scrapers. Reach me on
+    <a href={contact.linkedin} rel="me noopener">LinkedIn</a> or <a href={contact.github} rel="me noopener">GitHub</a> instead.
+  </p>
+  <p class="sr-only" aria-live="polite" data-email-status></p>
+</div>
