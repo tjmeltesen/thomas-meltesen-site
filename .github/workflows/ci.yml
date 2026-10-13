@@ -1,0 +1,35 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - name: Dependency audit (SRS-025)
+        run: npm audit --omit=dev --audit-level=high
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium firefox webkit
+      - name: Full pipeline (build, Vitest, Playwright + axe, frame timing, Lighthouse, email grep)
+        run: npm run verify 2>&1 | tee verify-output.txt
+        shell: bash -o pipefail {0}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: reports
+          path: |
+            lighthouse/
+            test-results/
+            verify-output.txt
