@@ -91,7 +91,7 @@ test.describe('email reveal', () => {
 });
 
 test.describe('navigation and routes', () => {
-  test('SRS-011 skip link, keyboard nav and active-section highlight', async ({ page, browserName }) => {
+  test('SRS-011 skip link, keyboard nav and active-section highlight', async ({ page }) => {
     await page.goto('/');
     await page.keyboard.press('Tab');
     const skip = page.getByRole('link', { name: 'Skip to content' });
@@ -256,10 +256,29 @@ test.describe('operation and quality', () => {
 
   test('SRS-020 Lighthouse >=95 in all categories, mobile and desktop (reads npm run lighthouse output)', async () => {
     const f = 'lighthouse/summary.json';
-    test.skip(!existsSync(f), 'run `npm run lighthouse` first');
+    expect(existsSync(f), 'lighthouse/summary.json missing: npm run verify regenerates it every run').toBe(true);
     const summary = JSON.parse(readFileSync(f, 'utf8')) as Record<string, Record<string, number>>;
     for (const [preset, scores] of Object.entries(summary)) {
-      for (const [cat, score] of Object.entries(scores)) expect(score, `${preset} ${cat}`).toBeGreaterThanOrEqual(95);
+      for (const cat of ['performance', 'accessibility', 'best-practices', 'seo']) expect(scores[cat], `${preset} ${cat}`).toBeGreaterThanOrEqual(95);
+    }
+  });
+
+  test('SRS-021 performance budget: JS <=100 KB gzip per page, LCP <=2.5 s, CLS <=0.1', async () => {
+    const { gzipSync } = await import('node:zlib');
+    const { join } = await import('node:path');
+    const { readdirSync, statSync } = await import('node:fs');
+    const walk = (d: string): string[] => readdirSync(d).flatMap((x) => (statSync(join(d, x)).isDirectory() ? walk(join(d, x)) : [join(d, x)]));
+    for (const html of walk('dist').filter((x) => x.endsWith('.html'))) {
+      const srcs = [...readFileSync(html, 'utf8').matchAll(/<script[^>]*src="([^"]+)"/g)].map((m) => m[1]);
+      const bytes = srcs.reduce((n, src) => n + gzipSync(readFileSync(join('dist', src.split('?')[0]))).length, 0);
+      expect(bytes, `${html} JS gzip bytes`).toBeLessThanOrEqual(100 * 1024);
+    }
+    const f = 'lighthouse/summary.json';
+    expect(existsSync(f), 'lighthouse/summary.json missing').toBe(true);
+    const summary = JSON.parse(readFileSync(f, 'utf8')) as Record<string, Record<string, number>>;
+    for (const [k, m] of Object.entries(summary)) {
+      expect(m.lcpMs, `${k} LCP`).toBeLessThanOrEqual(2500);
+      expect(m.cls, `${k} CLS`).toBeLessThanOrEqual(0.1);
     }
   });
 

@@ -1,7 +1,6 @@
 // Captures desktop hero, projects section and mobile views in light and dark (needs `npm run preview` running).
 import { chromium } from '@playwright/test';
 const base = process.env.BASE_URL ?? 'http://localhost:4321';
-const settle = (p) => p.evaluate(() => Promise.all(document.getAnimations().filter((a) => a.effect?.getTiming().duration !== 'auto').map((a) => a.finished)));
 const b = await chromium.launch();
 for (const scheme of ['light', 'dark']) {
   const desk = await b.newPage({ viewport: { width: 1440, height: 900 }, colorScheme: scheme });

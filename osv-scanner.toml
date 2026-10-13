@@ -1,0 +1,6 @@
+# SRS-025 risk acceptance: braces 3.0.3 is dev-only (eslint-plugin-astro -> fast-glob), no patched release exists,
+# never shipped to dist. Re-review 2026-11-13 or when a fix ships (Dependabot grouped updates).
+[[IgnoredVulns]]
+id = "GHSA-vfj7-8cjw-p6xm"
+ignoreUntil = 2026-11-13
+reason = "Dev-only lint dependency, no fix available, not in production bundle"
