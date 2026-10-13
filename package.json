@@ -19,7 +19,7 @@
     "@astrojs/check": "^0.9.10",
     "astro": "^5.18.2",
     "typescript": "^5.9.3",
-    "zod": "^3.25.76"
+    "zod": "^4.6.5"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.13.0",
