@@ -1,0 +1,16 @@
+---
+import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+---
+<Base title="Page not found — Thomas Meltesen" description="This page doesn’t exist. Head back to Thomas Meltesen’s portfolio." path="/404">
+  <Nav slot="nav" home={false} />
+  <section class="hero notfound" aria-labelledby="nf">
+    <div class="wrap hero-inner">
+      <p class="eyebrow hero-in">Error 404</p>
+      <h1 id="nf" class="hero-title hero-in"><span class="gradient-text">Lost in the graph.</span></h1>
+      <p class="hero-headline hero-in">That node doesn’t exist. Let’s get you back on a known path.</p>
+      <div class="hero-cta hero-in"><a class="btn btn-primary" href="/">Back home</a><a class="btn btn-ghost" href="/#projects">See projects</a></div>
+    </div>
+    <div class="hero-glow" aria-hidden="true"></div>
+  </section>
+</Base>

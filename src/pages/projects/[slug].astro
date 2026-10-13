@@ -1,0 +1,42 @@
+---
+import Base from '../../layouts/Base.astro';
+import Nav from '../../components/Nav.astro';
+import Icon from '../../components/Icon.astro';
+import { projects } from '../../lib/content';
+import type { Project } from '../../lib/schemas';
+
+export function getStaticPaths() {
+  return projects.map((p) => ({ params: { slug: p.slug }, props: { project: p } }));
+}
+const { project: p } = Astro.props as { project: Project };
+const idx = projects.findIndex((x) => x.slug === p.slug);
+const next = projects[(idx + 1) % projects.length]!;
+---
+<Base title={`${p.title} — Thomas Meltesen`} description={p.summary} path={`/projects/${p.slug}/`}>
+  <Nav slot="nav" home={false} />
+  <article class={`detail accent-${p.accent}`}>
+    <header class="detail-hero">
+      <div class="wrap narrow">
+        <a class="back" href={`/#project-${p.slug}`} data-testid="back-link">← All projects</a>
+        <p class="eyebrow hero-in">{p.kicker}</p>
+        <h1 class="detail-title hero-in">{p.title}</h1>
+        <p class="lede hero-in">{p.summary}</p>
+      </div>
+      <div class="hero-glow" aria-hidden="true"></div>
+    </header>
+    <div class="wrap narrow detail-body">
+      <section aria-labelledby="ov" data-reveal><h2 id="ov">Overview</h2><p>{p.overview}</p></section>
+      <section aria-labelledby="role" data-reveal><h2 id="role">My role</h2><p>{p.role}</p></section>
+      <section aria-labelledby="stack" data-reveal><h2 id="stack">Tech stack</h2><ul class="chips">{p.tags.map((t) => <li>{t}</li>)}</ul></section>
+      <section aria-labelledby="out" data-reveal><h2 id="out">Key outcomes</h2><ul class="outcomes">{p.outcomes.map((o) => <li>{o}</li>)}</ul></section>
+      {p.link && (
+        <section aria-labelledby="links" data-reveal><h2 id="links">Links</h2>
+          <a class="btn btn-primary" href={p.link} rel="noopener"><Icon name="github" /> View on GitHub</a>
+        </section>
+      )}
+      <nav class="next" aria-label="Next project" data-reveal>
+        <a href={`/projects/${next.slug}/`}><span class="muted small">Next project</span><span class="next-title">{next.title} <Icon name="arrow" /></span></a>
+      </nav>
+    </div>
+  </article>
+</Base>
