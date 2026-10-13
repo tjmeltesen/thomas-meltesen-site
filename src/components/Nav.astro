@@ -1,0 +1,19 @@
+---
+interface Props { home?: boolean }
+const { home = true } = Astro.props;
+const base = home ? '' : '/';
+const items = [
+  ['about', 'About'], ['experience', 'Experience'], ['projects', 'Projects'],
+  ['skills', 'Skills'], ['hobbies', 'Hobbies'], ['contact', 'Contact'],
+];
+---
+<header class="nav" data-nav>
+  <nav class="wrap nav-inner" aria-label="Primary">
+    <a class="brand" href={home ? '#top' : '/'} aria-label="Thomas Meltesen, home">Thomas Meltesen</a>
+    <ul class="nav-links">
+      {items.map(([id, label]) => (
+        <li><a href={`${base}#${id}`} data-nav-link={id}>{label}</a></li>
+      ))}
+    </ul>
+  </nav>
+</header>

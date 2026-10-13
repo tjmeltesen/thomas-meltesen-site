@@ -1,0 +1,15 @@
+---
+import { Image } from 'astro:assets';
+import { profile } from '../lib/content';
+// SRS-003: set profile.photo to e.g. "thomas.jpg" (placed in src/assets) to swap the monogram for a photo.
+const images = import.meta.glob<{ default: ImageMetadata }>('../assets/*.{jpg,jpeg,png,webp,avif}');
+const loader = profile.photo ? images[`../assets/${profile.photo}`] : undefined;
+const photo = loader ? (await loader()).default : null;
+---
+<div class="avatar" data-avatar={photo ? 'photo' : 'monogram'}>
+  {photo ? (
+    <Image src={photo} alt={`Portrait of ${profile.name}`} widths={[320, 640]} sizes="(min-width: 900px) 320px, 200px" loading="eager" fetchpriority="high" format="avif" />
+  ) : (
+    <span class="monogram" role="img" aria-label={`${profile.name} monogram`}>{profile.monogram}</span>
+  )}
+</div>

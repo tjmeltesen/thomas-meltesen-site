@@ -1,0 +1,134 @@
+---
+import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import Avatar from '../components/Avatar.astro';
+import EmailReveal from '../components/EmailReveal.astro';
+import Icon from '../components/Icon.astro';
+import { profile, education, experience, projects, skills, hobbies, contact } from '../lib/content';
+import { fmtYm } from '../lib/date';
+const [first, ...rest] = profile.name.split(' ');
+---
+<Base title={`${profile.name} — AI & Agentic Systems Engineer`} description={`${profile.name}: ${profile.headline}. ${profile.location}.`}>
+  <Nav slot="nav" />
+
+  <section id="top" class="hero" aria-labelledby="hero-title">
+    <div class="wrap hero-inner">
+      <Avatar />
+      <p class="eyebrow hero-in">{profile.location}</p>
+      <h1 id="hero-title" class="hero-title hero-in">
+        <span class="line">{first}</span> <span class="line gradient-text">{rest.join(' ')}</span>
+      </h1>
+      <p class="hero-headline hero-in" data-testid="headline">{profile.headline}</p>
+      <div class="hero-cta hero-in">
+        <a class="btn btn-primary" href="#projects">See my work</a>
+        <a class="btn btn-ghost" href="#contact">Get in touch <Icon name="arrow" /></a>
+      </div>
+    </div>
+    <div class="hero-glow" aria-hidden="true"></div>
+  </section>
+
+  <section id="about" class="section" aria-labelledby="about-title">
+    <div class="wrap narrow">
+      <h2 id="about-title" class="section-kicker" data-reveal>About</h2>
+      <p class="statement" data-reveal>{profile.intro}</p>
+      <p class="lede" data-reveal data-testid="bio">{profile.bio}</p>
+      <ol class="education" aria-label="Education">
+        {education.map((e) => (
+          <li class="edu-card card" data-reveal data-testid="education-item">
+            <p class="muted small">{e.period}</p>
+            <h3>{e.degree} · {e.school}</h3>
+            <p>{e.field}</p>
+            {e.highlights.length > 0 && <ul class="chips">{e.highlights.map((h) => <li>{h}</li>)}</ul>}
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section id="experience" class="section alt" aria-labelledby="exp-title">
+    <div class="wrap">
+      <p class="section-kicker" data-reveal>Experience</p>
+      <h2 id="exp-title" class="section-title" data-reveal>Where I’ve shipped.</h2>
+      <ol class="timeline">
+        {experience.map((x) => (
+          <li class="timeline-item" data-reveal data-testid="experience-item" data-end={x.end}>
+            <div class="timeline-meta">
+              <p class="muted small"><time datetime={x.start}>{fmtYm(x.start)}</time> – <time datetime={x.end}>{fmtYm(x.end)}</time></p>
+              <p class="muted small">{x.location}</p>
+            </div>
+            <div class="timeline-body">
+              <h3>{x.role}</h3>
+              <p class="company">{x.company}</p>
+              <ul>{x.highlights.map((h) => <li>{h}</li>)}</ul>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section id="projects" class="section" aria-labelledby="projects-title">
+    <div class="wrap">
+      <p class="section-kicker" data-reveal>Projects</p>
+      <h2 id="projects-title" class="section-title" data-reveal>Things I’ve built.</h2>
+      <ul class="project-grid">
+        {projects.map((p, i) => (
+          <li class={`project-card accent-${p.accent}`} id={`project-${p.slug}`} data-reveal data-delay={i % 3} data-testid="project-card">
+            <a class="project-link" href={`/projects/${p.slug}/`}>
+              <span class="project-orb" aria-hidden="true"></span>
+              <p class="muted small">{p.kicker}</p>
+              <h3>{p.title}</h3>
+              <p>{p.summary}</p>
+              <ul class="chips" aria-label="Tech">{p.tags.map((t) => <li>{t}</li>)}</ul>
+              <span class="more">Read more <Icon name="arrow" /></span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section id="skills" class="section alt" aria-labelledby="skills-title">
+    <div class="wrap">
+      <p class="section-kicker" data-reveal>Skills</p>
+      <h2 id="skills-title" class="section-title" data-reveal>The toolkit.</h2>
+      <div class="skills-grid">
+        {skills.map((s) => (
+          <div class="card skill-group" data-reveal data-testid="skill-group">
+            <h3>{s.group}</h3>
+            <ul class="chips">{s.items.map((i) => <li>{i}</li>)}</ul>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section id="hobbies" class="section" aria-labelledby="hobbies-title">
+    <div class="wrap">
+      <p class="section-kicker" data-reveal>Off the clock</p>
+      <h2 id="hobbies-title" class="section-title" data-reveal>Hobbies.</h2>
+      <ul class="hobby-grid">
+        {hobbies.map((h) => (
+          <li class="card hobby" data-reveal data-testid="hobby">
+            <span class="hobby-icon"><Icon name={h.icon} /></span>
+            <h3>{h.name}</h3>
+            <p class="muted">{h.blurb}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section id="contact" class="section contact" aria-labelledby="contact-title">
+    <div class="wrap narrow center">
+      <p class="section-kicker" data-reveal>Contact</p>
+      <h2 id="contact-title" class="section-title" data-reveal>Let’s build something.</h2>
+      <p class="lede" data-reveal>Open to AI and agentic-systems engineering roles. The fastest way to reach me is email.</p>
+      <div data-reveal><EmailReveal /></div>
+      <ul class="social" data-reveal>
+        <li><a class="btn btn-ghost" href={contact.linkedin} rel="me noopener"><Icon name="linkedin" /> LinkedIn</a></li>
+        <li><a class="btn btn-ghost" href={contact.github} rel="me noopener"><Icon name="github" /> GitHub</a></li>
+      </ul>
+    </div>
+  </section>
+</Base>
