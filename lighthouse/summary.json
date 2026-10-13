@@ -1,0 +1,38 @@
+{
+  "mobile /": {
+    "performance": 100,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100
+  },
+  "mobile /projects/smart-mirror/": {
+    "performance": 100,
+    "accessibility": 95,
+    "best-practices": 100,
+    "seo": 100
+  },
+  "mobile /404.html": {
+    "performance": 100,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100
+  },
+  "desktop /": {
+    "performance": 100,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100
+  },
+  "desktop /projects/smart-mirror/": {
+    "performance": 100,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100
+  },
+  "desktop /404.html": {
+    "performance": 100,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100
+  }
+}

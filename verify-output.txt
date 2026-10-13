@@ -1,0 +1,194 @@
+
+> thomas-meltesen-site@1.0.0 verify
+> node scripts/verify.mjs
+
+
+=== npm run build ===
+
+> thomas-meltesen-site@1.0.0 build
+> astro check && astro build && node scripts/check-dist.mjs
+
+17:15:46 [content] Syncing content
+17:15:46 [content] Synced content
+17:15:46 [types] Generated 42ms
+17:15:46 [check] Getting diagnostics for Astro files in /workspace/thomas-site...
+[96mscripts/screenshots.mjs[0m:[93m4[0m:[93m7[0m - [93mwarning[0m[90m ts(6133): [0m'settle' is declared but its value is never read.
+
+[7m4[0m const settle = (p) => p.evaluate(() => Promise.all(document.getAnimations().filter((a) => a.effect?.getTiming().duration !== 'auto').map((a) => a.finished)));
+[7m [0m [93m      ~~~~~~[0m
+
+[96mtests/e2e/site.spec.ts[0m:[93m94[0m:[93m87[0m - [93mwarning[0m[90m ts(6133): [0m'browserName' is declared but its value is never read.
+
+[7m94[0m   test('SRS-011 skip link, keyboard nav and active-section highlight', async ({ page, browserName }) => {
+[7m  [0m [93m                                                                                      ~~~~~~~~~~~[0m
+
+Result (28 files): 
+- 0 errors
+- 0 warnings
+- 2 hints
+
+17:15:50 [content] Syncing content
+17:15:50 [content] Synced content
+17:15:50 [types] Generated 33ms
+17:15:50 [build] output: "static"
+17:15:50 [build] mode: "static"
+17:15:50 [build] directory: /workspace/thomas-site/dist/
+17:15:50 [build] Collecting build info...
+17:15:50 [build] ✓ Completed in 47ms.
+17:15:50 [build] Building static entrypoints...
+17:15:50 [vite] ✓ built in 876ms
+17:15:50 [build] ✓ Completed in 912ms.
+
+ building client (vite) 
+17:15:50 [vite] transforming...
+17:15:50 [vite] ✓ 6 modules transformed.
+17:15:50 [vite] rendering chunks...
+17:15:51 [vite] computing gzip size...
+17:15:51 [vite] dist/_assets/Base.astro_astro_type_script_index_0_lang.BGJ20qdq.js  2.07 kB │ gzip: 0.94 kB
+17:15:51 [vite] ✓ built in 37ms
+
+ generating static routes 
+17:15:51 ▶ src/pages/404.astro
+17:15:51   └─ /404.html (+8ms) 
+17:15:51 ▶ src/pages/projects/[slug].astro
+17:15:51   ├─ /projects/agentic-rag-knowledge-graph/index.html (+3ms) 
+17:15:51   ├─ /projects/refl3ct/index.html (+2ms) 
+17:15:51   ├─ /projects/ae2mes/index.html (+2ms) 
+17:15:51   ├─ /projects/smart-mirror/index.html (+2ms) 
+17:15:51   ├─ /projects/smart-mirror-app/index.html (+2ms) 
+17:15:51   └─ /projects/piaq/index.html (+2ms) 
+17:15:51 ▶ src/pages/index.astro
+17:15:51   └─ /index.html (+4ms) 
+17:15:51 ✓ Completed in 42ms.
+
+17:15:51 [build] 8 page(s) built in 1.05s
+17:15:51 [build] Complete!
+check-dist: 11 files clean (no plaintext email, no inline script/style)
+
+=== npm run test:unit ===
+
+> thomas-meltesen-site@1.0.0 test:unit
+> vitest run
+
+
+ RUN  v5.0.4 /workspace/thomas-site
+
+
+ Test Files  2 passed (2)
+      Tests  12 passed (12)
+   Start at  17:15:51
+   Duration  346ms (transform 68%, import 22%, tests 7%, worker 3%)
+
+
+=== npx playwright test ===
+
+Running 72 tests using 4 workers
+
+  ✓   2 [chromium] › tests/e2e/site.spec.ts:24:3 › sections › SRS-005 experience shows 3 entries newest first (449ms)
+  ✓   1 [chromium] › tests/e2e/site.spec.ts:10:3 › sections › SRS-003 hero shows name, headline, location, bio and monogram fallback (546ms)
+  ✓   3 [chromium] › tests/e2e/site.spec.ts:30:3 › sections › SRS-006 projects show 6 cards with title, summary and tags (572ms)
+  ✓   4 [chromium] › tests/e2e/site.spec.ts:19:3 › sections › SRS-004 education shows 2 entries (470ms)
+  ✓   5 [chromium] › tests/e2e/site.spec.ts:40:3 › sections › SRS-007 skills show 5 groups (275ms)
+  ✓   6 [chromium] › tests/e2e/site.spec.ts:45:3 › sections › SRS-008 hobbies show 3 items (280ms)
+  ✓   7 [chromium] › tests/e2e/site.spec.ts:50:3 › sections › SRS-009 contact links to LinkedIn and GitHub and shows no phone number (265ms)
+  ✓   9 [chromium] › tests/e2e/site.spec.ts:74:5 › email reveal › without JavaScript › SRS-010 no-JS fallback points to LinkedIn and GitHub (293ms)
+  ✓   8 [chromium] › tests/e2e/site.spec.ts:60:3 › email reveal › SRS-010 built HTML has no plaintext email; keyboard reveal assembles it (566ms)
+  ✓  11 [chromium] › tests/e2e/site.spec.ts:94:3 › navigation and routes › SRS-011 skip link, keyboard nav and active-section highlight (494ms)
+  ✓  14 [chromium] › tests/e2e/site.spec.ts:134:1 › URS-013 no horizontal scroll from 360px to 2560px (702ms)
+  ✓  12 [chromium] › tests/e2e/site.spec.ts:107:3 › navigation and routes › SRS-012 every project has a detail page, back returns to its card; unknown route is 404 (1.2s)
+  ✓  15 [chromium] › tests/e2e/site.spec.ts:146:3 › motion › SRS-014 reveals are declarative data-reveal attributes driven by the motion module (246ms)
+  ✓  16 [chromium] › tests/e2e/site.spec.ts:154:5 › motion › reduced motion › SRS-015 SRS-023 with reduce, no transforms run and fades are <=150ms opacity-only (346ms)
+  ✓  13 [chromium] › tests/e2e/site.spec.ts:122:3 › navigation and routes › SRS-013 every route has title, description, OG tags and favicon (1.4s)
+  ✓  17 [chromium] › tests/e2e/site.spec.ts:177:3 › motion › SRS-016 IntersectionObserver fallback runs where scroll timelines are unsupported (254ms)
+  ✓  19 [chromium] › tests/e2e/site.spec.ts:221:3 › operation and quality › SRS-017 production build is served on localhost:4321 (15ms)
+  ✓  10 [chromium] › tests/e2e/site.spec.ts:82:5 › email reveal › without JavaScript › SRS-024 all content is visible with JS disabled (2.9s)
+  ✓  22 [chromium] › tests/e2e/site.spec.ts:247:3 › operation and quality › SRS-025 strict CSP present and no inline scripts (200ms)
+  -  23 [chromium] › tests/e2e/site.spec.ts:257:3 › operation and quality › SRS-020 Lighthouse >=95 in all categories, mobile and desktop (reads npm run lighthouse output)
+  ✘  24 [chromium] › tests/e2e/site.spec.ts:268:3 › operation and quality › SRS-024 URS-012 visual snapshots within 0.1% of approved baselines (195ms)
+  ✓  25 [firefox] › tests/e2e/site.spec.ts:10:3 › sections › SRS-003 hero shows name, headline, location, bio and monogram fallback (1.5s)
+  ✓  26 [firefox] › tests/e2e/site.spec.ts:19:3 › sections › SRS-004 education shows 2 entries (424ms)
+  ✓  27 [firefox] › tests/e2e/site.spec.ts:24:3 › sections › SRS-005 experience shows 3 entries newest first (419ms)
+  ✓  21 [chromium] › tests/e2e/site.spec.ts:237:3 › operation and quality › SRS-022 zero axe WCAG 2.2 AA violations on every route (5.5s)
+  ✓  20 [chromium] › tests/e2e/site.spec.ts:226:3 › operation and quality › SRS-018 site works with all external requests blocked, and makes none (5.6s)
+  ✓  28 [firefox] › tests/e2e/site.spec.ts:30:3 › sections › SRS-006 projects show 6 cards with title, summary and tags (512ms)
+  ✓  29 [firefox] › tests/e2e/site.spec.ts:50:3 › sections › SRS-009 contact links to LinkedIn and GitHub and shows no phone number (441ms)
+  ✓  30 [firefox] › tests/e2e/site.spec.ts:60:3 › email reveal › SRS-010 built HTML has no plaintext email; keyboard reveal assembles it (543ms)
+  ✓  33 [firefox] › tests/e2e/site.spec.ts:74:5 › email reveal › without JavaScript › SRS-010 no-JS fallback points to LinkedIn and GitHub (371ms)
+  ✓  31 [firefox] › tests/e2e/site.spec.ts:40:3 › sections › SRS-007 skills show 5 groups (1.2s)
+  ✓  32 [firefox] › tests/e2e/site.spec.ts:45:3 › sections › SRS-008 hobbies show 3 items (1.4s)
+  ✓  35 [firefox] › tests/e2e/site.spec.ts:94:3 › navigation and routes › SRS-011 skip link, keyboard nav and active-section highlight (752ms)
+  ✓  36 [firefox] › tests/e2e/site.spec.ts:107:3 › navigation and routes › SRS-012 every project has a detail page, back returns to its card; unknown route is 404 (1.1s)
+  ✓  34 [firefox] › tests/e2e/site.spec.ts:82:5 › email reveal › without JavaScript › SRS-024 all content is visible with JS disabled (3.6s)
+  ✓  37 [firefox] › tests/e2e/site.spec.ts:122:3 › navigation and routes › SRS-013 every route has title, description, OG tags and favicon (1.8s)
+  ✓  39 [firefox] › tests/e2e/site.spec.ts:146:3 › motion › SRS-014 reveals are declarative data-reveal attributes driven by the motion module (498ms)
+  ✓  38 [firefox] › tests/e2e/site.spec.ts:134:1 › URS-013 no horizontal scroll from 360px to 2560px (1.3s)
+  ✓  40 [firefox] › tests/e2e/site.spec.ts:154:5 › motion › reduced motion › SRS-015 SRS-023 with reduce, no transforms run and fades are <=150ms opacity-only (594ms)
+  ✓  43 [firefox] › tests/e2e/site.spec.ts:221:3 › operation and quality › SRS-017 production build is served on localhost:4321 (44ms)
+  -  42 [firefox] › tests/e2e/site.spec.ts:189:3 › motion › SRS-019 hero and scroll animations: <=5% of frames over 16.7ms at 4x CPU throttle (median of 3)
+  ✓  44 [firefox] › tests/e2e/site.spec.ts:226:3 › operation and quality › SRS-018 site works with all external requests blocked, and makes none (1.0s)
+  ✓  46 [firefox] › tests/e2e/site.spec.ts:247:3 › operation and quality › SRS-025 strict CSP present and no inline scripts (447ms)
+  -  47 [firefox] › tests/e2e/site.spec.ts:257:3 › operation and quality › SRS-020 Lighthouse >=95 in all categories, mobile and desktop (reads npm run lighthouse output)
+  ✓  41 [firefox] › tests/e2e/site.spec.ts:177:3 › motion › SRS-016 IntersectionObserver fallback runs where scroll timelines are unsupported (2.0s)
+  ✘  48 [firefox] › tests/e2e/site.spec.ts:268:3 › operation and quality › SRS-024 URS-012 visual snapshots within 0.1% of approved baselines (526ms)
+SRS-019 dropped-frame ratios [ 0, 0.027559055118110236, 0.031496062992125984 ]
+(node:196979) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  18 [chromium] › tests/e2e/site.spec.ts:189:3 › motion › SRS-019 hero and scroll animations: <=5% of frames over 16.7ms at 4x CPU throttle (median of 3) (14.0s)
+  ✓  50 [webkit] › tests/e2e/site.spec.ts:19:3 › sections › SRS-004 education shows 2 entries (712ms)
+  ✓  49 [webkit] › tests/e2e/site.spec.ts:10:3 › sections › SRS-003 hero shows name, headline, location, bio and monogram fallback (982ms)
+  ✓  51 [webkit] › tests/e2e/site.spec.ts:24:3 › sections › SRS-005 experience shows 3 entries newest first (770ms)
+  ✓  53 [webkit] › tests/e2e/site.spec.ts:40:3 › sections › SRS-007 skills show 5 groups (596ms)
+  ✓  54 [webkit] › tests/e2e/site.spec.ts:45:3 › sections › SRS-008 hobbies show 3 items (608ms)
+  ✓  52 [webkit] › tests/e2e/site.spec.ts:30:3 › sections › SRS-006 projects show 6 cards with title, summary and tags (1.1s)
+  ✓  55 [webkit] › tests/e2e/site.spec.ts:50:3 › sections › SRS-009 contact links to LinkedIn and GitHub and shows no phone number (711ms)
+  ✓  57 [webkit] › tests/e2e/site.spec.ts:74:5 › email reveal › without JavaScript › SRS-010 no-JS fallback points to LinkedIn and GitHub (631ms)
+  ✓  56 [webkit] › tests/e2e/site.spec.ts:60:3 › email reveal › SRS-010 built HTML has no plaintext email; keyboard reveal assembles it (961ms)
+  ✓  59 [webkit] › tests/e2e/site.spec.ts:94:3 › navigation and routes › SRS-011 skip link, keyboard nav and active-section highlight (1.2s)
+  ✓  60 [webkit] › tests/e2e/site.spec.ts:107:3 › navigation and routes › SRS-012 every project has a detail page, back returns to its card; unknown route is 404 (2.6s)
+  ✓  45 [firefox] › tests/e2e/site.spec.ts:237:3 › operation and quality › SRS-022 zero axe WCAG 2.2 AA violations on every route (10.1s)
+  ✓  61 [webkit] › tests/e2e/site.spec.ts:122:3 › navigation and routes › SRS-013 every route has title, description, OG tags and favicon (3.6s)
+  ✓  62 [webkit] › tests/e2e/site.spec.ts:134:1 › URS-013 no horizontal scroll from 360px to 2560px (2.7s)
+  ✓  63 [webkit] › tests/e2e/site.spec.ts:154:5 › motion › reduced motion › SRS-015 SRS-023 with reduce, no transforms run and fades are <=150ms opacity-only (901ms)
+  ✓  64 [webkit] › tests/e2e/site.spec.ts:177:3 › motion › SRS-016 IntersectionObserver fallback runs where scroll timelines are unsupported (590ms)
+  ✓  67 [webkit] › tests/e2e/site.spec.ts:221:3 › operation and quality › SRS-017 production build is served on localhost:4321 (17ms)
+  -  66 [webkit] › tests/e2e/site.spec.ts:189:3 › motion › SRS-019 hero and scroll animations: <=5% of frames over 16.7ms at 4x CPU throttle (median of 3)
+  ✓  58 [webkit] › tests/e2e/site.spec.ts:82:5 › email reveal › without JavaScript › SRS-024 all content is visible with JS disabled (6.6s)
+  ✓  65 [webkit] › tests/e2e/site.spec.ts:146:3 › motion › SRS-014 reveals are declarative data-reveal attributes driven by the motion module (757ms)
+  -  71 [webkit] › tests/e2e/site.spec.ts:257:3 › operation and quality › SRS-020 Lighthouse >=95 in all categories, mobile and desktop (reads npm run lighthouse output)
+  ✓  70 [webkit] › tests/e2e/site.spec.ts:247:3 › operation and quality › SRS-025 strict CSP present and no inline scripts (688ms)
+  ✘  72 [webkit] › tests/e2e/site.spec.ts:268:3 › operation and quality › SRS-024 URS-012 visual snapshots within 0.1% of approved baselines (680ms)
+  ✓  68 [webkit] › tests/e2e/site.spec.ts:226:3 › operation and quality › SRS-018 site works with all external requests blocked, and makes none (1.7s)
+  ✓  69 [webkit] › tests/e2e/site.spec.ts:237:3 › operation and quality › SRS-022 zero axe WCAG 2.2 AA violations on every route (7.0s)
+
+  5 skipped
+  67 passed (34.9s)
+
+=== npm run lighthouse ===
+
+> thomas-meltesen-site@1.0.0 lighthouse
+> node scripts/lighthouse.mjs
+
+┌─────────────────────────────────┬─────────────┬───────────────┬────────────────┬─────┐
+│ (index)                         │ performance │ accessibility │ best-practices │ seo │
+├─────────────────────────────────┼─────────────┼───────────────┼────────────────┼─────┤
+│ mobile /                        │ 100         │ 100           │ 100            │ 100 │
+│ mobile /projects/smart-mirror/  │ 100         │ 95            │ 100            │ 100 │
+│ mobile /404.html                │ 100         │ 100           │ 100            │ 100 │
+│ desktop /                       │ 100         │ 100           │ 100            │ 100 │
+│ desktop /projects/smart-mirror/ │ 100         │ 100           │ 100            │ 100 │
+│ desktop /404.html               │ 100         │ 100           │ 100            │ 100 │
+└─────────────────────────────────┴─────────────┴───────────────┴────────────────┴─────┘
+
+=== npx playwright test -g SRS-020 --project=chromium ===
+
+Running 1 test using 1 worker
+
+  ✓  1 [chromium] › tests/e2e/site.spec.ts:257:3 › operation and quality › SRS-020 Lighthouse >=95 in all categories, mobile and desktop (reads npm run lighthouse output) (16ms)
+
+  1 passed (1.2s)
+
+=== grep dist for plaintext email (URS-020) ===
+0 matches in 14 files
+
+VERIFY: ALL CHECKS PASSED
+EXIT 0
