@@ -269,8 +269,19 @@ test.describe('operation and quality', () => {
     const { readdirSync, statSync } = await import('node:fs');
     const walk = (d: string): string[] => readdirSync(d).flatMap((x) => (statSync(join(d, x)).isDirectory() ? walk(join(d, x)) : [join(d, x)]));
     for (const html of walk('dist').filter((x) => x.endsWith('.html'))) {
-      const srcs = [...readFileSync(html, 'utf8').matchAll(/<script[^>]*src="([^"]+)"/g)].map((m) => m[1]);
-      const bytes = srcs.reduce((n, src) => n + gzipSync(readFileSync(join('dist', src.split('?')[0]))).length, 0);
+      // Follow static imports so chunks pulled in by entry scripts are counted too.
+      const seen = new Set<string>();
+      const queue = [...readFileSync(html, 'utf8').matchAll(/<script[^>]*src="([^"]+)"/g)].map((m) => join('dist', m[1].split('?')[0]));
+      while (queue.length) {
+        const file = queue.pop()!;
+        if (seen.has(file)) continue;
+        seen.add(file);
+        const dir = file.slice(0, file.lastIndexOf('/'));
+        for (const m of readFileSync(file, 'utf8').matchAll(/(?:import|from)\s*\(?\s*["']([^"']+\.js)["']/g)) {
+          queue.push(m[1].startsWith('/') ? join('dist', m[1]) : join(dir, m[1]));
+        }
+      }
+      const bytes = [...seen].reduce((n, f) => n + gzipSync(readFileSync(f)).length, 0);
       expect(bytes, `${html} JS gzip bytes`).toBeLessThanOrEqual(100 * 1024);
     }
     const f = 'lighthouse/summary.json';
