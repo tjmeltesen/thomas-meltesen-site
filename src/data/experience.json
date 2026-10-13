@@ -1,0 +1,37 @@
+[
+  {
+    "company": "MMIT Business Solutions",
+    "role": "IT Intern",
+    "location": "Urbandale, IA",
+    "start": "2023-06",
+    "end": "2023-08",
+    "highlights": [
+      "Configured and deployed NAS platforms, server workstations, and network hardware across 100+ enterprise clients.",
+      "Diagnosed complex network connectivity issues to keep commercial IT infrastructure highly available."
+    ]
+  },
+  {
+    "company": "Intel Corporation",
+    "role": "Module Engineering Graduate Intern",
+    "location": "Hillsboro, OR",
+    "start": "2026-05",
+    "end": "2026-08",
+    "highlights": [
+      "Engineered an enterprise Agentic RAG pipeline with hybrid retrieval (knowledge graphs + vector stores) over thousands of Confluence pages — a 10x reduction in labor hours.",
+      "Architected structured context-ingestion schemas and retrieval workflows for factuality, citation grounding, and multi-step reasoning.",
+      "Applied Design of Experiments and statistical modeling to set baseline targets and tune performance for First-of-Kind deployments."
+    ]
+  },
+  {
+    "company": "Intel Corporation",
+    "role": "Manufacturing and Process Development Intern",
+    "location": "Hillsboro, OR",
+    "start": "2025-05",
+    "end": "2025-08",
+    "highlights": [
+      "Researched, implemented, and benchmarked two state-of-the-art ML models to classify real-time signal defect events.",
+      "Built automated SQL and REST data pipelines to structure multi-system time-series datasets of 1,000+ samples.",
+      "Ran model evaluation, hyperparameter tuning, and experiment tracking in Cnvrg.io, delivering an end-to-end ML proof of concept."
+    ]
+  }
+]

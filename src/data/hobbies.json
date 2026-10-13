@@ -1,0 +1,5 @@
+[
+  { "name": "Basketball", "icon": "basketball", "blurb": "Pickup runs, pace and spacing. The best offense is a good read." },
+  { "name": "Gaming", "icon": "gaming", "blurb": "Strategy, systems, and the occasional all-nighter with the squad." },
+  { "name": "Hanging out with friends", "icon": "friends", "blurb": "Good food, long conversations, and no laptops allowed." }
+]

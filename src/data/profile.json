@@ -1,0 +1,9 @@
+{
+  "name": "Thomas Meltesen",
+  "headline": "Aspiring AI/Agentic AI Engineer focused on Agent Orchestration & Agent Harness Systems",
+  "location": "Iowa City, IA",
+  "intro": "I build agents that think in graphs.",
+  "bio": "Electrical and Computer Engineering grad student at the University of Iowa. At Intel I engineered an enterprise Agentic RAG pipeline that cut engineering lookup labor by 10x. I like the hard part in the middle: orchestration, retrieval, and the harnesses that keep agents honest.",
+  "photo": null,
+  "monogram": "TM"
+}

@@ -1,0 +1,7 @@
+[
+  { "group": "Agent Orchestration & Frameworks", "items": ["Hermes Agent Framework", "Agentic Workflows", "Agent Harness Engineering", "Multi-Agent Systems", "Execution Graphs", "Task Routing"] },
+  { "group": "GenAI, RAG & Knowledge Systems", "items": ["Agentic RAG Pipelines", "Knowledge Graphs (Neo4j)", "Vector Databases (Chroma DB)", "Hybrid Search", "Dense Retrieval", "Context Engineering", "Data & Prompt Sanitization"] },
+  { "group": "Backend Systems & Infrastructure", "items": ["FastAPI", "RESTful APIs", "WebSockets", "Docker", "Microservices", "Linux", "Git/GitHub", "Cloudflare", "MCPs", "Sandboxed Execution", "Caching", "System Integration", "LLMs", "AI/ML"] },
+  { "group": "Programming & Data Systems", "items": ["Python", "C++", "SQL", "Lua", "C", "Java", "MATLAB", "Verilog", "Schema Validation", "Postgres", "MySQL"] },
+  { "group": "MLOps & Quantitative Analysis", "items": ["PyTorch", "TensorFlow", "Scikit-Learn", "Cnvrg.io", "Statistical Modeling", "Design of Experiments", "Automated Evals"] }
+]

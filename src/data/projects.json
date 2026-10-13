@@ -1,0 +1,92 @@
+[
+  {
+    "slug": "agentic-rag-knowledge-graph",
+    "title": "Agentic RAG Knowledge Graph",
+    "kicker": "Applied AI Research · Intel side project",
+    "summary": "Hybrid search and structured reasoning over unstructured wikis, fusing Neo4j graphs with Chroma DB embeddings.",
+    "overview": "An Agentic RAG pipeline that combines a Neo4j knowledge graph with Chroma DB vector embeddings, so an agent can both search semantically and walk explicit relationships across large, messy wiki repositories.",
+    "role": "Designed and built the pipeline end to end: ingestion schemas, graph indexing recipes, retrieval, and context assembly.",
+    "tags": ["Python", "Neo4j", "Chroma DB", "Hybrid Search", "LLMs"],
+    "outcomes": [
+      "Hybrid retrieval that blends graph traversal with dense vector search.",
+      "Custom ingestion schemas and graph indexing recipes that preserve contextual relationships for evidence-backed answers.",
+      "Optimized retrieval latency and scaled context assembly for multi-turn AI reasoning."
+    ],
+    "accent": "blue"
+  },
+  {
+    "slug": "refl3ct",
+    "title": "REFL3CT Smart Platform",
+    "kicker": "Senior Capstone · Full stack",
+    "summary": "A microservices platform with real-time state sync over WebSockets, built with FastAPI, React, SQLite, and Docker.",
+    "overview": "REFL3CT is a full stack microservices platform that keeps distributed endpoints in sync in real time. Services talk over WebSockets and REST, run in Docker, and recover gracefully when connectivity drops.",
+    "role": "Architected the platform and built persistent state management, session authentication, and failover logic, using agentic coding harnesses to speed up design and bug remediation.",
+    "tags": ["FastAPI", "React", "SQLite", "Docker", "WebSockets"],
+    "outcomes": [
+      "Real-time state synchronization via WebSockets and REST APIs.",
+      "Persistent state management, session auth, and failover connectivity across distributed endpoints.",
+      "LLM-assisted workflows for rapid prototyping, static analysis, and automated bug fixes."
+    ],
+    "accent": "purple"
+  },
+  {
+    "slug": "ae2mes",
+    "title": "AE2MES Automation Framework",
+    "kicker": "Modular systems automation",
+    "summary": "An event-driven automation harness in Lua with state-machine scheduling, resource management, and execution graphs.",
+    "overview": "AE2MES is a modular, event-driven automation harness. A state-machine scheduler drives execution graphs while a resource manager keeps work flowing without contention.",
+    "role": "Designed and implemented the harness, and used autonomous developer agents (Hermes Framework, Cursor CLI) to validate design patterns and run automated tests.",
+    "tags": ["Lua", "State Machines", "Execution Graphs", "Hermes", "Cursor CLI"],
+    "outcomes": [
+      "State-machine scheduling and resource management in a modular, event-driven core.",
+      "Agent-driven automated testing and architectural verification."
+    ],
+    "accent": "orange"
+  },
+  {
+    "slug": "smart-mirror",
+    "title": "Smart Mirror",
+    "kicker": "Raspberry Pi · Embedded + AI",
+    "summary": "A Pi-powered mirror with a virtual try-on flow, a job queue, caching, notifications, and physical GPIO buttons.",
+    "overview": "A smart mirror that runs on a Raspberry Pi. Its headline feature is a virtual try-on flow, backed by a job queue for heavy work, caching to keep it responsive, notifications, and physical GPIO buttons for hands-on control.",
+    "role": "Team project. Worked across the mirror software: the try-on flow, background job processing, and hardware integration.",
+    "tags": ["Raspberry Pi", "Python", "GPIO", "Job Queue", "Caching"],
+    "outcomes": [
+      "Virtual try-on flow on low-power hardware.",
+      "Job queue and caching layers keep the UI responsive while heavy work runs.",
+      "Notifications and GPIO button input for a phone-free experience."
+    ],
+    "link": "https://github.com/AncientMindgoblindees/Smart-Mirror",
+    "accent": "teal"
+  },
+  {
+    "slug": "smart-mirror-app",
+    "title": "Smart Mirror Companion App",
+    "kicker": "Mobile companion",
+    "summary": "The companion app for the Smart Mirror, for setting it up and controlling it from your phone.",
+    "overview": "The companion app pairs with the Smart Mirror so you can configure it and interact with it from your phone, complementing the mirror's own physical controls.",
+    "role": "Team project. Contributed to the app and its integration with the mirror's backend.",
+    "tags": ["Mobile", "API Integration", "UX"],
+    "outcomes": [
+      "Phone-side control and configuration for the mirror.",
+      "Shares the mirror's backend, so both surfaces stay in sync."
+    ],
+    "link": "https://github.com/AncientMindgoblindees/Smart-Mirror-App",
+    "accent": "pink"
+  },
+  {
+    "slug": "piaq",
+    "title": "PiAQ Air-Quality Dashboard",
+    "kicker": "Full stack · IoT",
+    "summary": "A full stack web app that turns Raspberry Pi air-quality sensor readings into a live dashboard.",
+    "overview": "PiAQ is a full stack web application that collects air-quality readings from a Raspberry Pi and presents them as a clear, live dashboard.",
+    "role": "Team project. Contributed to the full stack application.",
+    "tags": ["Raspberry Pi", "Full Stack", "Sensors", "Dashboard"],
+    "outcomes": [
+      "Sensor data from the Pi, surfaced in a live web dashboard.",
+      "End-to-end pipeline from hardware to browser."
+    ],
+    "link": "https://github.com/gseaba/PiAQ",
+    "accent": "green"
+  }
+]
