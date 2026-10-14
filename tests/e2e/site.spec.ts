@@ -79,7 +79,7 @@ test.describe('email reveal', () => {
       await expect(page.getByRole('button', { name: 'Show email address' })).toBeHidden();
     });
 
-    test('SRS-015 AC-1 with JS disabled, every revealed element starts visible before any scrolling', async ({ page }) => {
+    test('SRS-024 SRS-015 AC-1 with JS disabled, every revealed element starts visible before any scrolling', async ({ page }) => {
       await page.goto('/');
       const bad = await page.evaluate(() => [...document.querySelectorAll<HTMLElement>('[data-reveal]')]
         .filter((e) => getComputedStyle(e).opacity !== '1' || e.getAnimations().length > 0)
