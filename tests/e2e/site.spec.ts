@@ -85,6 +85,7 @@ test.describe('email reveal', () => {
         await el.scrollIntoViewIfNeeded();
         await expect(el).toBeVisible();
         await expect.poll(() => el.evaluate((e) => getComputedStyle(e).opacity)).toBe('1');
+        expect(await el.evaluate((e) => e.getAnimations().length)).toBe(0);
       }
     });
   });
@@ -151,6 +152,15 @@ test.describe('motion', () => {
 
   test.describe('reduced motion', () => {
     test.use({ reducedMotion: 'reduce' });
+    test('SRS-015 with reduce, every revealed element starts fully visible with no animation', async ({ page }) => {
+      for (const r of ['/', '/projects/refl3ct/']) {
+        await page.goto(r);
+        const bad = await page.evaluate(() => [...document.querySelectorAll<HTMLElement>('[data-reveal]')]
+          .filter((e) => getComputedStyle(e).opacity !== '1' || e.getAnimations().length > 0 || e.classList.contains('is-pending'))
+          .map((e) => e.className));
+        expect(bad, r).toEqual([]);
+      }
+    });
     test('SRS-015 SRS-023 with reduce, no transforms run and fades are <=150ms opacity-only', async ({ page }) => {
       for (const r of ['/', '/projects/refl3ct/']) {
         await page.goto(r);
