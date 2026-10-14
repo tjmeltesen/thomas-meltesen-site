@@ -51,6 +51,16 @@ jobs:
       - name: Full pipeline (lint, audit, OSV, build, Vitest, Playwright + axe, frame timing, Lighthouse, email grep)
         run: npm run verify 2>&1 | tee verify-output.txt
         shell: bash -o pipefail {0}
+      - name: Hash verified dist (URS-022)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: (cd dist && find . -type f ! -name SHA256SUMS -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS)
+      - uses: actions/upload-artifact@v4
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        with:
+          name: dist
+          path: dist/
+          include-hidden-files: true
+          if-no-files-found: error
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -59,3 +69,45 @@ jobs:
             lighthouse/
             test-results/
             verify-output.txt
+
+  # SRS-028/031: deploys the exact dist/ that the test job built and verified. Never runs on pull_request.
+  deploy:
+    needs: test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    environment: production
+    concurrency:
+      group: deploy-production
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+      - name: Verify artifact sha256 manifest
+        run: cd dist && sha256sum -c --quiet SHA256SUMS && rm SHA256SUMS
+      - name: Install Chromium for live check
+        run: npx playwright install --with-deps chromium
+      - name: Deploy + live check (rollback on failure)
+        id: deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: scripts/deploy.sh
+      - name: Deployed URL
+        if: always()
+        run: echo "Deployed URL ${{ steps.deploy.outputs.url }}" | tee -a "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: live-check
+          path: |
+            lighthouse/
+            *-output.txt
