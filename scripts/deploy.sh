@@ -12,6 +12,14 @@ if $W deployments list > deployments.txt 2>&1; then EXISTS=1
 elif grep -qE '\[code: 10007\]|This Worker does not exist' deployments.txt; then EXISTS=0
 else cat deployments.txt; echo "::error::could not determine whether the Worker exists (auth/network/other error)"; exit 1; fi
 echo "Worker exists: $EXISTS"
+# PREVIOUS_HASH (production check only; the preview check gets none, so any mismatch there fails at once): sha256 of the HTML currently live at / (empty if not serving), so the live check may
+# retry while the old version is still propagating, and fail on any other unexpected HTML.
+PREVIOUS_HASH=""
+if [ "$EXISTS" = 1 ] && [ -n "${LIVE_URL:-}" ]; then
+  if curl -sf -o prev.html "$LIVE_URL/"; then PREVIOUS_HASH=$(sha256sum prev.html | cut -d' ' -f1); fi
+fi
+export PREVIOUS_HASH
+echo "PREVIOUS_HASH=${PREVIOUS_HASH:-<none>}"
 if [ "$EXISTS" = 0 ]; then
   $W deploy 2>&1 | tee deploy-output.txt
   URL=$(grep -oE 'https://thomas-meltesen-site\.[a-z0-9-]+\.workers\.dev' deploy-output.txt | head -1)
@@ -27,7 +35,7 @@ VID=$(grep -oiE 'Worker Version ID: *[0-9a-f-]{36}' upload-output.txt | grep -oE
 PREVIEW=$(grep -oE 'https://[a-z0-9-]+-thomas-meltesen-site\.[a-z0-9-]+\.workers\.dev' upload-output.txt | head -1)
 [ -n "$VID" ] && [ -n "$PREVIEW" ] || { echo "::error::could not parse version id / preview URL"; exit 1; }
 echo "Version $VID preview $PREVIEW"
-npm run live-check -- "$PREVIEW" || { echo "::error::live check failed on preview; production untouched."; exit 1; }
+PREVIOUS_HASH="" npm run live-check -- "$PREVIEW" || { echo "::error::live check failed on preview; production untouched."; exit 1; }
 $W versions deploy "$VID@100%" -y 2>&1 | tee promote-output.txt
 URL="https://thomas-meltesen-site.$(echo "$PREVIEW" | sed -E 's#https://[a-z0-9-]+-thomas-meltesen-site\.##')"
 echo "url=$URL" >> "$GITHUB_OUTPUT"

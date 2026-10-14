@@ -19,7 +19,11 @@ for (const preset of ['mobile', 'desktop']) {
       const out = `lighthouse/${preset}-${path.replace(/\W+/g, '_') || 'home'}-${i}.json`;
       const args = [`${base}${path}`, '--quiet', '--output=json', `--output-path=${out}`, `--chrome-flags=--headless=new --no-sandbox`, `--only-categories=${cats.join(',')}`];
       if (preset === 'desktop') args.push('--preset=desktop');
-      execFileSync('npx', ['lighthouse', ...args], { stdio: 'inherit', env: { ...process.env, CHROME_PATH: chrome } });
+      // Retry a run that crashes (e.g. Lighthouse NO_NAVSTART trace error); scores are never retried.
+      for (let t = 1; ; t++) {
+        try { execFileSync('npx', ['lighthouse', ...args], { stdio: 'inherit', env: { ...process.env, CHROME_PATH: chrome } }); break; }
+        catch (e) { if (t >= 3) throw e; console.warn(`lighthouse run crashed, retry ${t}/2`); }
+      }
       const r = JSON.parse(readFileSync(out, 'utf8'));
       runs.push({ ...Object.fromEntries(cats.map((c) => [c, Math.round(r.categories[c].score * 100)])), lcpMs: r.audits['largest-contentful-paint'].numericValue, cls: r.audits['cumulative-layout-shift'].numericValue });
     }
