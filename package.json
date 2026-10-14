@@ -2,6 +2,7 @@
   "name": "thomas-meltesen-site",
   "version": "1.0.0",
   "private": true,
+  "license": "MIT",
   "type": "module",
   "scripts": {
     "dev": "astro dev --port 4321",

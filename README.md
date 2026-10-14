@@ -84,3 +84,8 @@ The frame-timing test (SRS-019) uses CDP 4x CPU throttling, so it runs in Chromi
 | 019 | 013 | e2e `SRS-013` |
 | 020 | 010 | unit + e2e `SRS-010`, `scripts/check-dist.mjs` |
 | derived | 025 | e2e `SRS-025`, `check-dist.mjs`, `npm audit` in CI |
+| 022 | 031 | unit `SRS-031` (`tests/unit/live-wait.test.ts`, `tests/unit/seo-policy.test.ts`), `scripts/live-check.mjs` post-deploy |
+
+## License
+
+The code is MIT-licensed (see [LICENSE](LICENSE)). The site's written content and photos are © 2026 Thomas Meltesen, all rights reserved.
