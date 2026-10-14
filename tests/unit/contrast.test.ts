@@ -29,7 +29,7 @@ const alphaOf = (s: string) => Number(s.match(/\/ ([\d.]+)/)?.[1] ?? 1);
 
 describe('SRS-022 hero gradient headline contrast', () => {
   it('finds the hero glow layers', () => expect(glowAlphas.length).toBeGreaterThanOrEqual(2));
-  it('every gradient stop clears 4.5:1 on --bg and on the glow peak (stricter than the 3:1 large-text rule)', () => {
+  it('AC-3 every gradient stop clears 4.5:1 on --bg and on the glow peak (stricter than the 3:1 large-text rule)', () => {
     const rule = css.match(/\.hero h1 \{[^}]*linear-gradient\(([^;]+)\);/);
     expect(rule, '.hero h1 gradient not found').toBeTruthy();
     const stops = [...rule![1].matchAll(/(#[0-9a-f]{6}\b|#[0-9a-f]{3}\b|rgb\([^)]+\))/gi)].map((m) => m[1]);
@@ -42,8 +42,8 @@ describe('SRS-022 hero gradient headline contrast', () => {
       }
     }
   });
-  it('solid card tint keeps body text and muted text above 4.5:1', () => {
-    expect(ratio([0xf5, 0xf5, 0xf7], [0x0f, 0x0f, 0x11])).toBeGreaterThanOrEqual(4.5);
-    expect(ratio([0xa1, 0xa1, 0xa6], [0x0f, 0x0f, 0x11])).toBeGreaterThanOrEqual(4.5);
+  it('AC-3 --card keeps --text and --muted above 4.5:1', () => {
+    const tok = (n: string) => hex(css.match(new RegExp(`--${n}: (#[0-9a-f]{6})`))![1]);
+    for (const t of ['text', 'muted']) expect(ratio(tok(t), tok('card')), t).toBeGreaterThanOrEqual(4.5);
   });
 });

@@ -79,8 +79,12 @@ test.describe('email reveal', () => {
       await expect(page.getByRole('button', { name: 'Show email address' })).toBeHidden();
     });
 
-    test('SRS-024 all content is visible with JS disabled', async ({ page }) => {
+    test('SRS-015 AC-1 with JS disabled, every revealed element starts visible before any scrolling', async ({ page }) => {
       await page.goto('/');
+      const bad = await page.evaluate(() => [...document.querySelectorAll<HTMLElement>('[data-reveal]')]
+        .filter((e) => getComputedStyle(e).opacity !== '1' || e.getAnimations().length > 0)
+        .map((e) => e.className));
+      expect(bad).toEqual([]);
       for (const el of await page.locator('[data-reveal]').all()) {
         await el.scrollIntoViewIfNeeded();
         await expect(el).toBeVisible();
@@ -92,7 +96,7 @@ test.describe('email reveal', () => {
 });
 
 test.describe('navigation and routes', () => {
-  test('SRS-011 skip link, keyboard nav and active-section highlight', async ({ page }) => {
+  test('SRS-011 AC-2 skip link, keyboard nav and active-section highlight', async ({ page }) => {
     await page.goto('/');
     await page.keyboard.press('Tab');
     const skip = page.getByRole('link', { name: 'Skip to content' });
@@ -152,7 +156,7 @@ test.describe('motion', () => {
 
   test.describe('reduced motion', () => {
     test.use({ reducedMotion: 'reduce' });
-    test('SRS-015 with reduce, every revealed element starts fully visible with no animation', async ({ page }) => {
+    test('SRS-015 AC-1 with reduce, every revealed element starts fully visible with no animation', async ({ page }) => {
       for (const r of ['/', '/projects/refl3ct/']) {
         await page.goto(r);
         const bad = await page.evaluate(() => [...document.querySelectorAll<HTMLElement>('[data-reveal]')]
@@ -196,7 +200,7 @@ test.describe('motion', () => {
     }
   });
 
-  test('SRS-019 hero and scroll animations: <=5% of frames over 16.7ms at 4x CPU throttle (median of 3)', async ({ page, browserName }) => {
+  test('SRS-019 AC-3 hero and scroll animations: <=5% of frames over 16.7ms at 4x CPU throttle (median of 3)', async ({ page, browserName }) => {
     test.skip(browserName !== 'chromium', 'CDP CPU throttling is Chromium-only (test plan v0.2)');
     const cdp = await page.context().newCDPSession(page);
     await cdp.send('Emulation.setCPUThrottlingRate', { rate: 4 });
@@ -244,7 +248,7 @@ test.describe('operation and quality', () => {
   });
 
   // Axe samples one frame; mid-reveal opacity would read as low contrast, so scan the settled (reduced-motion) state.
-  test('SRS-022 zero axe WCAG 2.2 AA violations on every route', async ({ page }) => {
+  test('SRS-022 AC-2 AC-3 zero axe WCAG 2.2 AA violations on every route', async ({ page }) => {
     await page.emulateMedia({ reducedMotion: 'reduce' });
     for (const r of routes) {
       await page.goto(r);
@@ -254,7 +258,7 @@ test.describe('operation and quality', () => {
     }
   });
 
-  test('SRS-025 strict CSP present and no inline scripts', async ({ page }) => {
+  test('SRS-025 SRS-029 AC-4 strict CSP present and no inline scripts', async ({ page }) => {
     const errors: string[] = [];
     page.on('console', (m) => { if (/Content.Security.Policy|CSP/i.test(m.text())) errors.push(m.text()); });
     await page.goto('/');
@@ -303,12 +307,22 @@ test.describe('operation and quality', () => {
     }
   });
 
-  // URS-012: visual baselines need Thomas's URS-009 design sign-off before they can be approved.
-  // Strict expected failure: if this ever passes without approved baselines, the build fails.
-  test('SRS-024 URS-012 visual snapshots within 0.1% of approved baselines', async ({ page }) => {
-    test.fail(true, 'Placeholder: baselines pending URS-009 design sign-off');
-    await page.goto('/');
-    const approved = existsSync('tests/e2e/__approved_baselines__/APPROVED');
-    expect(approved, 'no approved baselines yet').toBe(true);
+  // URS-012 / SRS-027: baselines approved by Thomas on ce0b155 (design sign-off 2026-10-13).
+  // Generated only by the Baselines workflow on the CI runner, never locally (font rendering differs).
+  test.describe('SRS-027 URS-012 visual snapshots', () => {
+    test.use({ reducedMotion: 'reduce' });
+    const shots: [string, number, number, string | null][] = [
+      ['desktop-hero', 1440, 900, null], ['desktop-projects', 1440, 1080, 'projects'],
+      ['mobile-hero', 390, 844, null], ['mobile-projects', 390, 844, 'projects'],
+    ];
+    for (const [name, w, h, anchor] of shots) {
+      test(`SRS-027 ${name} within 0.1% of the approved baseline`, async ({ page, browserName }) => {
+        test.skip(browserName !== 'chromium', 'baselines are Chromium on the CI runner');
+        await page.setViewportSize({ width: w, height: h });
+        await page.goto('/');
+        if (anchor) await page.evaluate((a) => scrollTo({ top: document.getElementById(a)!.offsetTop + 40, behavior: 'instant' }), anchor);
+        await expect(page).toHaveScreenshot(`${name}.png`, { maxDiffPixelRatio: 0.001, animations: 'disabled' });
+      });
+    }
   });
 });
