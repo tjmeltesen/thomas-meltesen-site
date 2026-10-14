@@ -5,6 +5,7 @@ import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import { readdirSync, readFileSync } from 'node:fs';
 import { chromium } from '@playwright/test';
+import { waitForDeploy } from './live-wait.mjs';
 import { SECURITY_HEADERS, HTML_CACHE, ASSET_CACHE, ASSETS_DIR } from '../src/lib/security-headers.mjs';
 
 const base = process.argv.slice(2).find((a) => !a.startsWith('--'))?.replace(/\/$/, '');
@@ -14,6 +15,14 @@ const check = (ok, msg) => { console.log(`${ok ? 'PASS' : 'FAIL'} ${msg}`); if (
 const sha = (b) => createHash('sha256').update(b).digest('hex');
 const project = readdirSync('dist/projects')[0];
 const pages = ['/', `/projects/${project}/`];
+
+// Wait for propagation (SRS-031): retry only on 404 / connection error / PREVIOUS_HASH still served.
+const ready = await waitForDeploy({
+  url: `${base}/`, distHash: sha(readFileSync('dist/index.html')), previousHash: process.env.PREVIOUS_HASH ?? '',
+  expectedHeaders: { ...SECURITY_HEADERS, 'Cache-Control': HTML_CACHE }, log: console.log,
+});
+if (!ready.ok) { console.error(`FAIL propagation wait: ${ready.reason}`); process.exit(1); }
+console.log(`PASS deploy is serving the dist build (attempt ${ready.attempts})`);
 
 for (const p of pages) {
   const r = await fetch(base + p, { redirect: 'follow' });
