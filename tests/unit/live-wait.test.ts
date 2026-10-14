@@ -53,4 +53,16 @@ describe('SRS-031 waitForDeploy', () => {
     expect(r.reason).toMatch(/timed out after 60s/);
     expect(fetchFn.mock.calls.length).toBeLessThanOrEqual(31);
   });
+  it('SRS-031 each request carries a 10s abort signal; a timed-out request is retried as a connection error', async () => {
+    vi.useFakeTimers();
+    const fetchFn = vi.fn()
+      .mockImplementationOnce((_u: string, o: RequestInit) => {
+        expect(o.signal).toBeInstanceOf(AbortSignal);
+        return Promise.reject(new DOMException('The operation was aborted due to timeout', 'TimeoutError'));
+      })
+      .mockResolvedValueOnce(res(200, NEW));
+    const p = waitForDeploy({ ...base, fetchFn });
+    await vi.runAllTimersAsync();
+    expect(await p).toEqual({ ok: true, attempts: 2 });
+  });
 });

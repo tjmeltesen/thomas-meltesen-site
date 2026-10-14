@@ -1,18 +1,19 @@
 // SRS-031: waits for a fresh deploy to be served before the live check asserts anything.
 // Retries ONLY on: 404, connection error, or a 200 whose HTML sha256 equals previousHash (old version
 // still propagating). Once the HTML hash equals distHash, headers are checked exactly once.
+// Each request is aborted after requestTimeoutMs (10s) and treated as a connection error.
 // Any other 200 hash, wrong headers, or the timeout fails immediately.
 import { createHash } from 'node:crypto';
 
 export const sha256 = (b) => createHash('sha256').update(b).digest('hex');
 
 export async function waitForDeploy({ url, distHash, previousHash = '', expectedHeaders = {},
-  fetchFn = fetch, timeoutMs = 60_000, intervalMs = 2_000, log = () => {} }) {
+  fetchFn = fetch, timeoutMs = 60_000, requestTimeoutMs = 10_000, intervalMs = 2_000, log = () => {} }) {
   const start = Date.now();
   for (let attempt = 1; ; attempt++) {
     let retry;
     try {
-      const r = await fetchFn(url, { redirect: 'follow', cache: 'no-store' });
+      const r = await fetchFn(url, { redirect: 'follow', cache: 'no-store', signal: AbortSignal.timeout(requestTimeoutMs) });
       if (r.status === 404) retry = '404';
       else if (r.status !== 200) return { ok: false, reason: `status ${r.status}` };
       else {

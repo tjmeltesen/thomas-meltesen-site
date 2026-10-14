@@ -16,7 +16,7 @@ echo "Worker exists: $EXISTS"
 # retry while the old version is still propagating, and fail on any other unexpected HTML.
 PREVIOUS_HASH=""
 if [ "$EXISTS" = 1 ] && [ -n "${LIVE_URL:-}" ]; then
-  if curl -sf -o prev.html "$LIVE_URL/"; then PREVIOUS_HASH=$(sha256sum prev.html | cut -d' ' -f1); fi
+  if curl -sf --max-time 10 -o prev.html "$LIVE_URL/"; then PREVIOUS_HASH=$(sha256sum prev.html | cut -d' ' -f1); fi
 fi
 export PREVIOUS_HASH
 echo "PREVIOUS_HASH=${PREVIOUS_HASH:-<none>}"
