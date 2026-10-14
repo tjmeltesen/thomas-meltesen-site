@@ -1,4 +1,4 @@
-// SRS-031 / URS-022: post-deploy live check. Usage: npm run live-check -- <url> [--no-lighthouse]
+// SRS-031 / URS-022: post-deploy live check. Usage: npm run live-check -- <url> [--no-lighthouse] [--preview]
 // Fails (exit 1) unless the deployed site serves the exact verified dist/ build with every
 // required header, zero CSP violations, no injected third-party scripts, and Lighthouse >= 95.
 import { createHash } from 'node:crypto';
@@ -6,6 +6,7 @@ import { execFileSync } from 'node:child_process';
 import { readdirSync, readFileSync } from 'node:fs';
 import { chromium } from '@playwright/test';
 import { waitForDeploy } from './live-wait.mjs';
+import { hasNoindex } from './seo-policy.mjs';
 import { SECURITY_HEADERS, HTML_CACHE, ASSET_CACHE, ASSETS_DIR } from '../src/lib/security-headers.mjs';
 
 const base = process.argv.slice(2).find((a) => !a.startsWith('--'))?.replace(/\/$/, '');
@@ -27,6 +28,7 @@ console.log(`PASS deploy is serving the dist build (attempt ${ready.attempts})`)
 for (const p of pages) {
   const r = await fetch(base + p, { redirect: 'follow' });
   check(r.ok, `${p} status ${r.status}`);
+  if (!process.argv.includes('--preview')) check(!hasNoindex(r.headers.get('x-robots-tag')), `${p} no X-Robots-Tag noindex in production (${JSON.stringify(r.headers.get('x-robots-tag'))})`);
   for (const [k, v] of Object.entries({ ...SECURITY_HEADERS, 'Cache-Control': HTML_CACHE })) {
     check(r.headers.get(k) === v, `${p} ${k} = ${JSON.stringify(r.headers.get(k))}`);
   }
@@ -60,7 +62,7 @@ try {
 } finally { await browser.close(); }
 
 if (!process.argv.includes('--no-lighthouse')) {
-  execFileSync('node', ['scripts/lighthouse.mjs'], { stdio: 'inherit', env: { ...process.env, BASE_URL: base } });
+  execFileSync('node', ['scripts/lighthouse.mjs', ...(process.argv.includes('--preview') ? ['--preview'] : [])], { stdio: 'inherit', env: { ...process.env, BASE_URL: base } });
   const summary = JSON.parse(readFileSync('lighthouse/summary.json', 'utf8'));
   for (const [k, v] of Object.entries(summary)) {
     for (const c of ['performance', 'accessibility', 'best-practices', 'seo']) check(v[c] >= 95, `Lighthouse ${k} ${c} ${v[c]} >= 95`);

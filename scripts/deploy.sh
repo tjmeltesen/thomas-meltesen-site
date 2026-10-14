@@ -35,7 +35,7 @@ VID=$(grep -oiE 'Worker Version ID: *[0-9a-f-]{36}' upload-output.txt | grep -oE
 PREVIEW=$(grep -oE 'https://[a-z0-9-]+-thomas-meltesen-site\.[a-z0-9-]+\.workers\.dev' upload-output.txt | head -1)
 [ -n "$VID" ] && [ -n "$PREVIEW" ] || { echo "::error::could not parse version id / preview URL"; exit 1; }
 echo "Version $VID preview $PREVIEW"
-PREVIOUS_HASH="" npm run live-check -- "$PREVIEW" || { echo "::error::live check failed on preview; production untouched."; exit 1; }
+PREVIOUS_HASH="" npm run live-check -- "$PREVIEW" --preview || { echo "::error::live check failed on preview; production untouched."; exit 1; }
 $W versions deploy "$VID@100%" -y 2>&1 | tee promote-output.txt
 URL="https://thomas-meltesen-site.$(echo "$PREVIEW" | sed -E 's#https://[a-z0-9-]+-thomas-meltesen-site\.##')"
 echo "url=$URL" >> "$GITHUB_OUTPUT"
