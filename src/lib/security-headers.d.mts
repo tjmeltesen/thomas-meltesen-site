@@ -4,3 +4,4 @@ export const HTML_CACHE: string;
 export const ASSET_CACHE: string;
 export const ASSETS_DIR: string;
 export function renderHeaders(): string;
+export const HEADER_CSP: string;

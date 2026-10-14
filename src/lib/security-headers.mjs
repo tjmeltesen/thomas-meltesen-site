@@ -6,8 +6,11 @@ export const CSP = [
   "font-src 'self'", "connect-src 'self'", "object-src 'none'", "base-uri 'self'", "form-action 'self'",
 ].join('; ');
 
+// Header-only: frame-ancestors is ignored in <meta> CSP, so it lives only in the HTTP header.
+export const HEADER_CSP = `${CSP}; frame-ancestors 'none'`;
+
 export const SECURITY_HEADERS = {
-  'Content-Security-Policy': CSP,
+  'Content-Security-Policy': HEADER_CSP,
   'Strict-Transport-Security': 'max-age=31536000',
   'X-Content-Type-Options': 'nosniff',
   'Referrer-Policy': 'strict-origin-when-cross-origin',

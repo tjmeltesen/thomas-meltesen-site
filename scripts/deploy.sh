@@ -5,9 +5,12 @@
 set -euo pipefail
 W="npx --no-install wrangler"
 if [ -z "${CLOUDFLARE_API_TOKEN:-}" ] || [ -z "${CLOUDFLARE_ACCOUNT_ID:-}" ]; then
-  echo "::warning::CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID not set in the production environment; skipping deploy."; exit 0
+  echo "::error::CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID not set in the production environment."; exit 1
 fi
-if $W deployments list > deployments.txt 2>&1 && grep -qi "version" deployments.txt; then EXISTS=1; else EXISTS=0; fi
+# First-deploy path only on Cloudflare's explicit "Worker does not exist" (API code 10007); any other error fails red.
+if $W deployments list > deployments.txt 2>&1; then EXISTS=1
+elif grep -qE '\[code: 10007\]|This Worker does not exist' deployments.txt; then EXISTS=0
+else cat deployments.txt; echo "::error::could not determine whether the Worker exists (auth/network/other error)"; exit 1; fi
 echo "Worker exists: $EXISTS"
 if [ "$EXISTS" = 0 ]; then
   $W deploy 2>&1 | tee deploy-output.txt

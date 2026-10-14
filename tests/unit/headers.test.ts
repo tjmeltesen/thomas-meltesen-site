@@ -13,7 +13,7 @@ const block = (path: string) => {
 describe('SRS-029 dist/_headers', () => {
   it('SRS-029 /* has the exact security headers and HTML cache', () => {
     expect(block('/*')).toEqual([
-      `Content-Security-Policy: ${CSP}`,
+      `Content-Security-Policy: ${CSP}; frame-ancestors 'none'`,
       'Strict-Transport-Security: max-age=31536000',
       'X-Content-Type-Options: nosniff',
       'Referrer-Policy: strict-origin-when-cross-origin',
@@ -27,9 +27,12 @@ describe('SRS-029 dist/_headers', () => {
   it('SRS-029 /_assets/* is immutable and detaches the HTML cache rule', () => {
     expect(block('/_assets/*')).toEqual(['! Cache-Control', 'Cache-Control: public, max-age=31536000, immutable']);
   });
-  it('SRS-029 header CSP equals the built <meta> CSP', () => {
+  it("SRS-029 header CSP equals the built <meta> CSP plus frame-ancestors none", () => {
     const html = readFileSync('dist/index.html', 'utf8');
     const meta = html.match(/http-equiv="Content-Security-Policy" content="([^"]+)"/)?.[1].replace(/&#39;/g, "'");
     expect(meta).toBe(CSP);
+    const header = block('/*')[0].replace('Content-Security-Policy: ', '');
+    expect(header).toBe(`${meta}; frame-ancestors 'none'`);
+    expect(meta).not.toContain('frame-ancestors');
   });
 });
