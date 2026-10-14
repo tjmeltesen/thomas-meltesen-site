@@ -7,22 +7,48 @@ on:
 permissions:
   contents: read
 
+# Superseded PR runs are cancelled; every run on main finishes so merged code always has a full CI record.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   test:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
+      # Caches npm's download folder (~/.npm) keyed on package-lock.json; node_modules is never cached.
       - uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci
-      - name: Dependency audit (SRS-025)
+      - name: Dependency audit (SRS-025, always fresh)
         run: npm audit --omit=dev --audit-level=high
+
+      - name: Resolve Playwright version
+        id: pw
+        run: echo "version=$(node -p "require('@playwright/test/package.json').version")" >> "$GITHUB_OUTPUT"
+      - name: Cache Playwright browsers (exact OS + version key, no restore-keys)
+        id: pw-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ steps.pw.outputs.version }}
       - name: Install Playwright browsers
-        run: npx playwright install --with-deps chromium firefox webkit
-      - name: Full pipeline (build, Vitest, Playwright + axe, frame timing, Lighthouse, email grep)
+        if: steps.pw-cache.outputs.cache-hit != 'true'
+        run: npx playwright install chromium firefox webkit
+      - name: Install Playwright system libraries (every run; not covered by the browser cache)
+        run: npx playwright install-deps chromium firefox webkit
+
+      - name: Cache OSV scanner binary (SHA-256 still verified on every run)
+        uses: actions/cache@v4
+        with:
+          path: .cache
+          key: osv-scanner-${{ runner.os }}-${{ hashFiles('scripts/osv.mjs') }}
+
+      - name: Full pipeline (lint, audit, OSV, build, Vitest, Playwright + axe, frame timing, Lighthouse, email grep)
         run: npm run verify 2>&1 | tee verify-output.txt
         shell: bash -o pipefail {0}
       - uses: actions/upload-artifact@v4
