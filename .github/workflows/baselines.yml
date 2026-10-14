@@ -1,0 +1,21 @@
+# SRS-027: regenerates visual baselines on the same ubuntu runner and browsers CI checks them with.
+# Runs manually or on pushes to the baselines PR branch; the uploaded snapshots are committed in a reviewed PR.
+name: Baselines
+on:
+  workflow_dispatch:
+  push:
+    branches: [sprint2/baselines]
+permissions: { contents: read }
+jobs:
+  baselines:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version-file: .nvmrc, cache: npm }
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run build
+      - run: npx playwright test -g "SRS-027" --project=chromium --update-snapshots
+      - uses: actions/upload-artifact@v4
+        with: { name: baselines, path: tests/e2e/*-snapshots/ }
