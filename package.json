@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev --port 4321",
-    "build": "astro check && astro build && node scripts/check-dist.mjs",
+    "build": "astro check && astro build && node scripts/check-dist.mjs && node scripts/write-headers.mjs",
     "preview": "astro preview --port 4321",
     "test": "npm run test:unit && npm run test:e2e",
     "test:unit": "vitest run",
@@ -14,7 +14,8 @@
     "lighthouse": "node scripts/lighthouse.mjs",
     "images": "node scripts/make-images.mjs",
     "verify": "node scripts/verify.mjs",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "live-check": "node scripts/live-check.mjs"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.10",
@@ -32,7 +33,8 @@
     "globals": "^17.13.0",
     "lighthouse": "^13.5.0",
     "typescript-eslint": "^8.71.2",
-    "vitest": "^5.0.4"
+    "vitest": "^5.0.4",
+    "wrangler": "4.150.0"
   },
   "engines": {
     "node": ">=20"

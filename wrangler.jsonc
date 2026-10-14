@@ -1,0 +1,9 @@
+// SRS-028: pure static-assets Worker (no main script, no adapter). dist/ is built once in CI and deployed as-is.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "thomas-meltesen-site",
+  "compatibility_date": "2026-10-01",
+  "workers_dev": true,
+  "preview_urls": true,
+  "assets": { "directory": "./dist", "not_found_handling": "404-page" }
+}

@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import { profile } from '../lib/content';
+import { CSP } from '../lib/security-headers.mjs';
 
 interface Props { title: string; description: string; path?: string }
 const { title, description, path = '/' } = Astro.props;
@@ -8,10 +9,7 @@ const site = Astro.site ?? new URL('http://localhost:4321');
 const canonical = new URL(path, site).href;
 const ogImage = new URL('/og.png', site).href;
 // SRS-025: strict CSP, no inline script or style allowed in production.
-const csp = [
-  "default-src 'self'", "script-src 'self'", "style-src 'self'", "img-src 'self' data:",
-  "font-src 'self'", "connect-src 'self'", "object-src 'none'", "base-uri 'self'", "form-action 'self'",
-].join('; ');
+const csp = CSP;
 const isProd = import.meta.env.PROD;
 ---
 <!doctype html>
