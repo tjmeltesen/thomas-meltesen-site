@@ -1,0 +1,19 @@
+---
+import Icon from '../Icon.astro';
+import { hobbies } from '../../lib/content';
+---
+  <section id="hobbies" class="section" aria-labelledby="hobbies-title">
+    <div class="wrap">
+      <p class="section-kicker" data-reveal>Off the clock</p>
+      <h2 id="hobbies-title" class="section-title" data-reveal>Hobbies.</h2>
+      <ul class="hobby-grid">
+        {hobbies.map((h) => (
+          <li class="card hobby" data-reveal data-testid="hobby">
+            <span class="hobby-icon"><Icon name={h.icon} /></span>
+            <h3>{h.name}</h3>
+            <p class="muted">{h.blurb}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>

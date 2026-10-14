@@ -1,0 +1,17 @@
+---
+import EmailReveal from '../EmailReveal.astro';
+import Icon from '../Icon.astro';
+import { contact } from '../../lib/content';
+---
+  <section id="contact" class="section contact" aria-labelledby="contact-title">
+    <div class="wrap narrow center">
+      <p class="section-kicker" data-reveal>Contact</p>
+      <h2 id="contact-title" class="section-title" data-reveal>Let’s build something.</h2>
+      <p class="lede" data-reveal>Open to AI and agentic-systems engineering roles. The fastest way to reach me is email.</p>
+      <div data-reveal><EmailReveal /></div>
+      <ul class="social" data-reveal>
+        <li><a class="btn btn-ghost" href={contact.linkedin} rel="me noopener"><Icon name="linkedin" /> LinkedIn</a></li>
+        <li><a class="btn btn-ghost" href={contact.github} rel="me noopener"><Icon name="github" /> GitHub</a></li>
+      </ul>
+    </div>
+  </section>

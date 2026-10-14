@@ -1,0 +1,17 @@
+---
+import { skills } from '../../lib/content';
+---
+  <section id="skills" class="section alt" aria-labelledby="skills-title">
+    <div class="wrap">
+      <p class="section-kicker" data-reveal>Skills</p>
+      <h2 id="skills-title" class="section-title" data-reveal>The toolkit.</h2>
+      <div class="skills-grid">
+        {skills.map((s) => (
+          <div class="card skill-group" data-reveal data-testid="skill-group">
+            <h3>{s.group}</h3>
+            <ul class="chips">{s.items.map((i) => <li>{i}</li>)}</ul>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>

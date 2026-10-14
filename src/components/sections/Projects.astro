@@ -1,0 +1,24 @@
+---
+import Icon from '../Icon.astro';
+import { projects } from '../../lib/content';
+---
+  <section id="projects" class="section" aria-labelledby="projects-title">
+    <div class="wrap">
+      <p class="section-kicker" data-reveal>Projects</p>
+      <h2 id="projects-title" class="section-title" data-reveal>Things I’ve built.</h2>
+      <ul class="project-grid">
+        {projects.map((p, i) => (
+          <li class={`project-card accent-${p.accent}`} id={`project-${p.slug}`} data-reveal data-delay={i % 3} data-testid="project-card">
+            <a class="project-link" href={`/projects/${p.slug}/`}>
+              <span class="project-orb" aria-hidden="true"></span>
+              <p class="muted small">{p.kicker}</p>
+              <h3>{p.title}</h3>
+              <p>{p.summary}</p>
+              <ul class="chips" aria-label="Tech">{p.tags.map((t) => <li>{t}</li>)}</ul>
+              <span class="more">Read more <Icon name="arrow" /></span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
